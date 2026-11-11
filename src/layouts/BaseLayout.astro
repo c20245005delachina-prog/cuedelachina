@@ -1,22 +1,26 @@
+
 ---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 import "../styles/global.css";
+
 const name = "Cuennie De La China";
-const position = "Documentation";
+const position = "Web Developer";
 ---
 
-
+<!doctype html>
 <html lang="en">
     <head>
-        <meta charset="utf-8" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="icon" href="/favicon.ico" />
-        <meta name="viewport" content="width=device-width" />
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="generator" content={Astro.generator} />
+
         <title>{name} | {position}</title>
     </head>
+
     <body>
-        
+        <Header />
         <slot />
-   
+        <Footer />
     </body>
 </html>

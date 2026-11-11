@@ -1,0 +1,31 @@
+  <section id="contact" class="darkmode">
+            <h2 class="section-title">Let's Build Together!</h2>
+            <p class="mb-6">Have a project idea? Send me a message.</p>
+
+            <form id="contactForm" class="mx-auto flex max-w-2xl flex-col gap-4">
+                <div>
+                    <label for="name" class="mb-2 block font-semibold">Name</label>
+                    <input class="field" type="text" id="name" name="name"
+                        placeholder="Your name" required>
+                </div>
+
+                <div>
+                    <label for="email" class="mb-2 block font-semibold">Email</label>
+                    <input class="field" type="email" id="email" name="email"
+                        placeholder="your@email.com" required>
+                </div>
+
+                <div>
+                    <label for="message" class="mb-2 block font-semibold">Message</label>
+                    <textarea class="field" id="message" name="message" rows="5"
+                        placeholder="Your message..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary self-start">
+                    Send Message →
+                </button>
+
+                <p id="formNotice" class="hidden accent"></p>
+           
+            </form>
+        </section>
