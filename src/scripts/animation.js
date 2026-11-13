@@ -16,14 +16,12 @@ const tl = gsap.timeline({
     }
 });
 
-// Heading
 tl.from("h1", {
     y: -60,
     opacity: 0,
     duration: 1
 });
 
-// Navigation
 tl.from("nav a", {
     y: -20,
     opacity: 0,
@@ -31,14 +29,12 @@ tl.from("nav a", {
     stagger: 0.2
 });
 
-// Hero
 tl.from("#hero", {
     y: 50,
     opacity: 0,
     duration: 0.8
 });
 
-// Four Information Cards
 tl.from("#about, #services, #skills, #education", {
     y: 50,
     opacity: 0,
@@ -48,7 +44,6 @@ tl.from("#about, #services, #skills, #education", {
     ease: "back.out(1.7)"
 });
 
-// Start timeline automatically
 tl.play();
 
 
@@ -66,7 +61,30 @@ if (replayButton) {
 
 
 // ===================================
-// 3. SCROLLTRIGGER + SCRUB
+// 3. SCROLL PROGRESS BAR
+// ===================================
+
+const progressBar = document.querySelector("#progressBar");
+
+if (progressBar) {
+
+    gsap.to(progressBar, {
+        width: "100%",
+        ease: "none",
+
+        scrollTrigger: {
+            trigger: document.documentElement,
+            start: "top top",
+            end: "max",
+            scrub: 0.3
+        }
+    });
+
+}
+
+
+// ===================================
+// 4. SCROLLTRIGGER + SCRUB
 // ===================================
 
 const scrollSections = gsap.utils.toArray(
@@ -78,9 +96,9 @@ scrollSections.forEach((section) => {
     gsap.fromTo(
         section,
         {
-            y: 120,
-            opacity: 0.2,
-            scale: 0.95
+            y: 150,
+            opacity: 0,
+            scale: 0.85
         },
         {
             y: 0,
@@ -91,10 +109,8 @@ scrollSections.forEach((section) => {
             scrollTrigger: {
                 trigger: section,
                 start: "top 90%",
-                end: "center 50%",
+                end: "top 30%",
                 scrub: 1,
-
-                // Show markers while testing
                 markers: true
             }
         }
@@ -104,7 +120,7 @@ scrollSections.forEach((section) => {
 
 
 // ===================================
-// 4. PARALLAX EFFECT FOR HERO
+// 5. HERO PARALLAX
 // ===================================
 
 const heroVisual = document.querySelector(
@@ -129,7 +145,7 @@ if (heroVisual) {
 
 
 // ===================================
-// 5. HOVER BOUNCE FOR SECTIONS
+// 6. HOVER BOUNCE
 // ===================================
 
 const allSections = gsap.utils.toArray(
@@ -139,30 +155,26 @@ const allSections = gsap.utils.toArray(
 allSections.forEach((section) => {
 
     section.addEventListener("mouseenter", () => {
-
         gsap.to(section, {
             scale: 1.02,
             duration: 0.3,
             ease: "back.out(1.7)"
         });
-
     });
 
     section.addEventListener("mouseleave", () => {
-
         gsap.to(section, {
             scale: 1,
             duration: 0.3,
             ease: "power2.out"
         });
-
     });
 
 });
 
 
 // ===================================
-// 6. DARK MODE TOGGLE
+// 7. DARK MODE
 // ===================================
 
 const toggleButton = document.querySelector("#toggledark");
@@ -180,14 +192,21 @@ if (toggleButton) {
             ease: "power2.out",
 
             onComplete: () => {
-
                 gsap.set(toggleButton, {
                     rotation: 0
                 });
-
             }
         });
 
     });
 
 }
+
+
+// ===================================
+// 8. REFRESH SCROLLTRIGGER
+// ===================================
+
+window.addEventListener("load", () => {
+    ScrollTrigger.refresh();
+});
