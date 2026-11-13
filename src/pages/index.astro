@@ -1,15 +1,13 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro"
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "./index/sections/Hero.astro";
+import About from "./index/sections/About.astro";
+import Services from "./index/sections/Services.astro";
+import Contact from "./index/sections/Contact.astro";
+
 const name = "Cuennie De La China";
 const position = "Documentation";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import About from "../sections/About.astro";
-import Contact from "../sections/Contact.astro";
-import Hero from "../sections/Hero.astro";
-import Services from "../sections/Services.astro";
-
 ---
-
 
 <BaseLayout>
     <h1 class="text-red-700">{name} | {position}</h1>
