@@ -1,212 +1,357 @@
 
-console.log("GSAP version:", gsap.version);
-
-// REGISTER SCROLLTRIGGER
-gsap.registerPlugin(ScrollTrigger);
-
+console.log("Animation script loaded!");
 
 // ===================================
-// 1. TIMELINE ANIMATION
+// 1. GSAP INITIALIZATION
 // ===================================
 
-const tl = gsap.timeline({
-    paused: true,
-    defaults: {
-        ease: "bounce.out"
-    }
-});
+const gsap = window.gsap;
+const ScrollTrigger = window.ScrollTrigger;
 
-tl.from("h1", {
-    y: -60,
-    opacity: 0,
-    duration: 1
-});
+if (!gsap || !ScrollTrigger) {
+    console.error("GSAP or ScrollTrigger failed to load.");
 
-tl.from("nav a", {
-    y: -20,
-    opacity: 0,
-    duration: 0.6,
-    stagger: 0.2
-});
+} else {
 
-tl.from("#hero", {
-    y: 50,
-    opacity: 0,
-    duration: 0.8
-});
+    gsap.registerPlugin(ScrollTrigger);
 
-tl.from("#about, #services, #skills, #education", {
-    y: 50,
-    opacity: 0,
-    scale: 0.9,
-    duration: 0.8,
-    stagger: 0.2,
-    ease: "back.out(1.7)"
-});
-
-tl.play();
+    console.log("GSAP version:", gsap.version);
 
 
-// ===================================
-// 2. REPLAY TIMELINE BUTTON
-// ===================================
+    // ===================================
+    // 2. MAIN TIMELINE
+    // ===================================
 
-const replayButton = document.querySelector("#replayTimeline");
-
-if (replayButton) {
-    replayButton.addEventListener("click", () => {
-        tl.restart();
-    });
-}
-
-
-// ===================================
-// 3. SCROLL PROGRESS BAR
-// ===================================
-
-const progressBar = document.querySelector("#progressBar");
-
-if (progressBar) {
-
-    gsap.to(progressBar, {
-        width: "100%",
-        ease: "none",
-
-        scrollTrigger: {
-            trigger: document.documentElement,
-            start: "top top",
-            end: "max",
-            scrub: 0.3
+    const tl = gsap.timeline({
+        paused: true,
+        defaults: {
+            ease: "power2.out"
         }
     });
 
-}
+    tl.from("h1", {
+        y: -60,
+        opacity: 0,
+        duration: 1
+    });
 
-
-// ===================================
-// 4. SCROLLTRIGGER + SCRUB
-// ===================================
-
-const scrollSections = gsap.utils.toArray(
-    "#projects, #experience, #contact"
-);
-
-scrollSections.forEach((section) => {
-
-    gsap.fromTo(
-        section,
+    tl.from(
+        ".nav-link",
         {
-            y: 150,
+            y: -20,
             opacity: 0,
-            scale: 0.85
+            duration: 0.5,
+            stagger: 0.1
         },
+        "-=0.5"
+    );
+
+    tl.from(
+        "#hero",
         {
-            y: 0,
-            opacity: 1,
-            scale: 1,
+            y: 50,
+            opacity: 0,
+            duration: 0.8
+        },
+        "-=0.2"
+    );
+
+    tl.from(
+        "#about, #services, #skills, #education",
+        {
+            y: 50,
+            opacity: 0,
+            scale: 0.9,
+            duration: 0.7,
+            stagger: 0.2
+        },
+        "-=0.3"
+    );
+
+    // Play timeline automatically
+    tl.play();
+
+
+    // ===================================
+    // 3. REPLAY BUTTON
+    // ===================================
+
+    const replayButton = document.querySelector(
+        "#replayTimeline"
+    );
+
+    if (replayButton) {
+
+        replayButton.addEventListener("click", () => {
+
+            console.log("Replay button clicked!");
+
+            tl.restart();
+
+        });
+
+    } else {
+
+        console.error("Replay button not found!");
+
+    }
+
+
+    // ===================================
+    // 4. DARK MODE TOGGLE
+    // ===================================
+
+    const toggleButton = document.querySelector(
+        "#toggledark"
+    );
+
+    const html = document.documentElement;
+
+    if (toggleButton) {
+
+        // Set initial button label
+        toggleButton.textContent = html.classList.contains("dark")
+            ? "☀ Light Mode"
+            : "☾ Dark Mode";
+
+        toggleButton.addEventListener("click", () => {
+
+            html.classList.toggle("dark");
+
+            const isDark = html.classList.contains("dark");
+
+            toggleButton.textContent = isDark
+                ? "☀ Light Mode"
+                : "☾ Dark Mode";
+
+            gsap.fromTo(
+                toggleButton,
+                {
+                    rotation: 0
+                },
+                {
+                    rotation: 360,
+                    duration: 0.5,
+                    ease: "power2.out"
+                }
+            );
+
+            console.log("Dark mode:", isDark);
+
+        });
+
+    } else {
+
+        console.error("Dark mode button not found!");
+
+    }
+
+
+    // ===================================
+    // 5. NAVIGATION
+    // ===================================
+
+    const navigationLinks = document.querySelectorAll(
+        ".nav-link, .logo"
+    );
+
+    navigationLinks.forEach((link) => {
+
+        link.addEventListener("click", (event) => {
+
+            const href = link.getAttribute("href");
+
+            if (!href || !href.startsWith("#")) return;
+
+            const target = document.querySelector(href);
+
+            if (!target) {
+                console.warn("Navigation target not found:", href);
+                return;
+            }
+
+            event.preventDefault();
+
+            target.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+            history.replaceState(null, "", href);
+
+        });
+
+    });
+
+
+    // ===================================
+    // 6. SCROLL PROGRESS BAR
+    // ===================================
+
+    const progressBar = document.querySelector(
+        "#progressBar"
+    );
+
+    function updateProgressBar() {
+
+        if (!progressBar) return;
+
+        const scrollTop = window.scrollY;
+
+        const scrollHeight =
+            document.documentElement.scrollHeight -
+            window.innerHeight;
+
+        const progress = scrollHeight > 0
+            ? scrollTop / scrollHeight
+            : 0;
+
+        progressBar.style.transform =
+            `scaleX(${Math.min(Math.max(progress, 0), 1)})`;
+
+    }
+
+    if (progressBar) {
+
+        window.addEventListener(
+            "scroll",
+            updateProgressBar,
+            { passive: true }
+        );
+
+        window.addEventListener(
+            "resize",
+            updateProgressBar
+        );
+
+        updateProgressBar();
+
+        console.log("Progress bar initialized!");
+
+    } else {
+
+        console.error("Progress bar element not found!");
+
+    }
+
+
+    // ===================================
+    // 7. SCROLLTRIGGER + SCRUB
+    // ===================================
+
+    const scrollSections = gsap.utils.toArray(
+        "#projects, #experience, #contact"
+    );
+
+    scrollSections.forEach((section) => {
+
+        gsap.fromTo(
+            section,
+            {
+                y: 150,
+                opacity: 0,
+                scale: 0.85
+            },
+            {
+                y: 0,
+                opacity: 1,
+                scale: 1,
+                ease: "none",
+
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 90%",
+                    end: "top 30%",
+                    scrub: 1,
+                    markers: false,
+                    invalidateOnRefresh: true
+                }
+            }
+        );
+
+    });
+
+
+    // ===================================
+    // 8. HERO PARALLAX
+    // ===================================
+
+    const heroVisual = document.querySelector(
+        "#hero > div:last-child"
+    );
+
+    if (heroVisual) {
+
+        gsap.to(heroVisual, {
+
+            y: -80,
             ease: "none",
 
             scrollTrigger: {
-                trigger: section,
-                start: "top 90%",
-                end: "top 30%",
-                scrub: 1,
-                markers: true
+                trigger: "#hero",
+                start: "top top",
+                end: "bottom top",
+                scrub: 1
             }
-        }
+
+        });
+
+    }
+
+
+    // ===================================
+    // 9. HOVER BOUNCE EFFECT
+    // ===================================
+
+    const allSections = gsap.utils.toArray(
+        "#about, #services, #skills, #education, #projects, #experience, #contact"
     );
 
-});
+    allSections.forEach((section) => {
 
+        section.addEventListener("mouseenter", () => {
 
-// ===================================
-// 5. HERO PARALLAX
-// ===================================
+            gsap.to(section, {
+                scale: 1.02,
+                duration: 0.3,
+                ease: "back.out(1.7)",
+                overwrite: "auto"
+            });
 
-const heroVisual = document.querySelector(
-    "#hero > div:last-child"
-);
-
-if (heroVisual) {
-
-    gsap.to(heroVisual, {
-        y: -80,
-        ease: "none",
-
-        scrollTrigger: {
-            trigger: "#hero",
-            start: "top top",
-            end: "bottom top",
-            scrub: 1
-        }
-    });
-
-}
-
-
-// ===================================
-// 6. HOVER BOUNCE
-// ===================================
-
-const allSections = gsap.utils.toArray(
-    "#about, #services, #skills, #education, #projects, #experience, #contact"
-);
-
-allSections.forEach((section) => {
-
-    section.addEventListener("mouseenter", () => {
-        gsap.to(section, {
-            scale: 1.02,
-            duration: 0.3,
-            ease: "back.out(1.7)"
         });
-    });
 
-    section.addEventListener("mouseleave", () => {
-        gsap.to(section, {
-            scale: 1,
-            duration: 0.3,
-            ease: "power2.out"
-        });
-    });
+        section.addEventListener("mouseleave", () => {
 
-});
+            gsap.to(section, {
+                scale: 1,
+                duration: 0.3,
+                ease: "power2.out",
+                overwrite: "auto"
+            });
 
-
-// ===================================
-// 7. DARK MODE
-// ===================================
-
-const toggleButton = document.querySelector("#toggledark");
-const html = document.documentElement;
-
-if (toggleButton) {
-
-    toggleButton.addEventListener("click", () => {
-
-        html.classList.toggle("dark");
-
-        gsap.to(toggleButton, {
-            rotation: "+=360",
-            duration: 0.6,
-            ease: "power2.out",
-
-            onComplete: () => {
-                gsap.set(toggleButton, {
-                    rotation: 0
-                });
-            }
         });
 
     });
 
-}
 
+    // ===================================
+    // 10. REFRESH SCROLLTRIGGER
+    // ===================================
 
-// ===================================
-// 8. REFRESH SCROLLTRIGGER
-// ===================================
+    window.addEventListener("load", () => {
 
-window.addEventListener("load", () => {
+        ScrollTrigger.refresh();
+        updateProgressBar();
+
+    });
+
+    window.addEventListener("resize", () => {
+
+        ScrollTrigger.refresh();
+        updateProgressBar();
+
+    });
+
     ScrollTrigger.refresh();
-});
+
+}

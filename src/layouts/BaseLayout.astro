@@ -8,7 +8,6 @@ const name = "Cuennie De La China";
 const position = "Web Developer";
 ---
 
-<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -18,18 +17,48 @@ const position = "Web Developer";
         <title>{name} | {position}</title>
     </head>
 
-    <body> 
-         <!-- SCROLL PROGRESS BAR -->
-    <div id="progressBar"></div>
+    <body
+        id="page"
+        class="min-h-screen bg-white text-purple-900 duration-300 dark:bg-purple-950 dark:text-white"
+    >
+        <!-- Scroll Progress Bar -->
+        <div id="progressBar" class="progress-bar"></div>
+
+        <!-- Navigation -->
         <Header />
-        <slot />
+
+        <!-- Page Content -->
+        <main>
+            <slot />
+        </main>
+
+        <!-- Footer -->
         <Footer />
 
-        <script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
-        <script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+        <!-- GSAP -->
+        <script
+            is:inline
+            src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"
+        ></script>
 
+        <!-- ScrollTrigger -->
+        <script
+            is:inline
+            src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"
+        ></script>
+
+        <!-- Main Animation Script -->
         <script>
-       import "../scripts/animation.js";
-       </script>
+            import "../scripts/animation.js";
+        </script>
+
+        <!-- Falling Leaves -->
+        <script>
+            import { FallingLeaves } from "falling-leaves";
+
+            new FallingLeaves({
+                shapes: ["maple", "oak", "ginkgo", "birch", "oval"]
+            });
+        </script>
     </body>
 </html>
